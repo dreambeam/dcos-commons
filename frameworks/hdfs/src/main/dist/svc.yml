@@ -52,11 +52,11 @@ pods:
         env:
           JOURNALNODE: true
         readiness-check:
-          cmd: >
-              READY=$(grep "IPC Server listener on {{TASKCFG_ALL_JOURNAL_NODE_RPC_PORT}}: starting" stderr | wc -l) &&
-              [ $READY -ge 1 ]
+          # No other indicator as to when JN is ready
+          # "Initializing journal in directory" in stderr is a good sign, though it only appears once the NNs start, hence a catch-22
+          cmd: sleep 120
           interval: 10
-          timeout: 60
+          timeout: 125
   name:
     count: 2
     user: {{TASKCFG_ALL_TASK_USER}}

@@ -2,6 +2,7 @@ import sys
 import shakedown
 import time
 import traceback
+import dcos
 
 def out(msg):
     '''Emit an informational message on test progress during test runs'''
@@ -39,6 +40,9 @@ def try_throws_n_times(predicate, attempts=1, sleep_seconds=0):
     for index in range(attempts):
         try:
             return predicate()
+        except dcos.errors.DCOSException as e:
+            if str(e) == "Package is already installed":
+                return
         except:
             if index == attempts-1:
                 raise
