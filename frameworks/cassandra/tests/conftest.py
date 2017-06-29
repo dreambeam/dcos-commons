@@ -6,8 +6,9 @@ import string
 import pytest
 import shakedown
 
-
-@pytest.fixture(scope='session', autouse=True)
+## Commented out so it doesn't actually run.
+## Using the PR for comments and feedback, don't want the tests.
+#@pytest.fixture(scope='session', autouse=True)
 def configure_universe(request):
     stub_urls = {}
 
@@ -22,15 +23,15 @@ def configure_universe(request):
 
     try:
         # clean up any duplicate repositories
-        current_universes = shakedown.run_dcos_command('dcos package repo list --json')
+        current_universes = shakedown.run_dcos_command('package repo list --json')
         for repo in json.loads(current_universes)['repositories']:
             if repo['uri'] in stub_urls.values():
-                remove_package_cmd = 'dcos package repo remove {}'.format(repo['name'])
+                remove_package_cmd = 'package repo remove {}'.format(repo['name'])
                 shakedown.run_dcos_command(remove_package_cmd)
 
         # add the needed universe repositories
         for name, url in stub_urls.items():
-            add_package_cmd = 'dcos package repo add --index=0 {} {}'.format(name, url)
+            add_package_cmd = 'package repo add --index=0 {} {}'.format(name, url)
             shakedown.run_dcos_command(add_package_cmd)
 
         # let the test session execute
@@ -38,5 +39,5 @@ def configure_universe(request):
     finally:
         # clear out the added universe repositores at testing end
         for name, url in stub_urls.items():
-            remove_package_cmd = 'dcos package repo remove {}'.format(name)
+            remove_package_cmd = 'package repo remove {}'.format(name)
             shakedown.run_dcos_command(remove_package_cmd)
