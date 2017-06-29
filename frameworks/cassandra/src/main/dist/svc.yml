@@ -10,7 +10,6 @@ pods:
       dcos:
     {{/ENABLE_VIRTUAL_NETWORK}}
     image: {{CASSANDRA_DOCKER_IMAGE}}
-    image: mesosphere/cassandra:1.0.26-3.0.10
     volume:
       path: container-path
       type: {{CASSANDRA_DISK_TYPE}}
